@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-python@v5
         if: runner.os != 'macOS'
         with:
-          python-version: '3.15'
+          python-version: '3.15.0'
           architecture: x64
       - name: Python universal2 oficial (Mac)
         if: runner.os == 'macOS'
