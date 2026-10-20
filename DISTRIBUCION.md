@@ -7,7 +7,7 @@ Una página de descarga puede elegir el paquete correcto. El ejecutable sigue si
 1. Ejecuta `python preparar_github.py`. Genera `build/Strata-fuentes-11.0.0.zip`. Solo contiene fuentes, recursos públicos y el proceso de compilación; excluye manuscritos, cuentas, sesiones, copias y claves administrativas. No subas toda esta carpeta de trabajo.
 2. En GitHub pulsa **+ → New repository**. Nombre sugerido: `strata-studio`. Elige **Private** para comenzar. No es necesario añadir un README ni una licencia: ya hay un README entre los archivos.
 3. Extrae el ZIP en una carpeta nueva. Para conservar `.github/workflows` y el resto de carpetas, usa **GitHub Desktop → File → Clone repository**, clona tu repositorio y copia DENTRO los archivos extraídos, incluida la carpeta `.github`. No copies el ZIP ni una carpeta envolvente. En GitHub Desktop escribe “Preparar compilaciones” en Summary, pulsa **Commit to main** y luego **Push origin**. No necesitas escribir comandos Git.
-4. Abre el repositorio en la web → **Actions → Generar instaladores → Run workflow**. Si GitHub pide habilitar Actions para tu repositorio, habilítalo. No pide contraseñas de Supabase ni certificados para esta primera prueba.
+4. Abre el repositorio en la web → **Actions → Generar instaladores → Run workflow**. Selecciona `all` para generar los tres paquetes, o `windows`, `macos` o `linux` para repetir solo uno. Si GitHub pide habilitar Actions para tu repositorio, habilítalo. No pide contraseñas de Supabase ni certificados para esta primera prueba.
 5. Cuando finalice, abre la ejecución. En **Artifacts** estarán `Strata-Windows`, `Strata-macOS` y `Strata-Linux`. Un fallo conserva los informes de diagnóstico; el paquete de ese sistema no se ofrece como verificado. Cada artefacto de GitHub es un ZIP que contiene el instalador y un JSON con su SHA-256.
 
 Con el plan de GitHub que tengas, los minutos gratuitos para repositorios privados pueden tener un límite. No hacen falta ejecuciones programadas: el flujo solo arranca cuando lo solicitas.
@@ -21,6 +21,10 @@ Con el plan de GitHub que tengas, los minutos gratuitos para repositorios privad
 | Linux | `Strata-11.0.0-linux-x86_64.tar.gz` | Ubuntu 24.04 de escritorio o compatible reciente, x86_64 |
 
 Mac utiliza Python oficial universal2. Se comprueba que todos los binarios Mach-O incluyan **arm64 y x86_64**; si falta una arquitectura, la compilación falla. No se anuncia una descarga universal falsa. La prueba de arranque en el runner comprueba su arquitectura nativa; todavía hay que probar el resultado en un Mac Intel y un Mac Apple Silicon.
+
+El cifrado usa cryptography actual. Su módulo Intel se compila con OpenSSL estático y se combina con la rueda ARM64 oficial de la misma versión; ambos archivos se verifican contra los SHA-256 publicados por PyPI. CFFI se compila para las dos arquitecturas usando libffi del SDK de Apple. El preparador no recurre a versiones antiguas de cifrado para obtener soporte Intel.
+
+En Windows se incluye `python3t.dll`, necesaria para las ruedas ABI de Python 3.15. Si el Python del runner la omite, se obtiene del paquete embebible oficial de la misma versión y arquitectura, comprobando su SHA-256. No modifica el Python de tu equipo.
 
 Linux conserva los enlaces simbólicos y permisos del runtime en el TAR. Extraer la carpeta completa y ejecutar `sh instalar.sh` instala por usuario sin sudo, registra el icono y el formato `.strata`. También se puede ejecutar directamente `./Strata` desde la carpeta extraída. Linux ARM y distribuciones antiguas requieren otra compilación.
 
