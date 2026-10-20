@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Strata Studio 11.0</title>
+  <link rel="stylesheet" href="/ui/styles.css" />
+  <link rel="stylesheet" href="/ui/v8.css" />
+  <link rel="stylesheet" href="/ui/v95.css" />
+  <link rel="stylesheet" href="/ui/editorial.css" />
+  <link rel="stylesheet" href="/ui/beta2.css" />
+  <link rel="stylesheet" href="/ui/v10.css" />
+  <link rel="stylesheet" href="/ui/v11.css" />
+</head>
+<body data-theme="grafito" class="booting">
+<div id="app">
+
+  <!-- =====================================================================
+       BARRA DE TÍTULO FRAMELESS + CINTA DE HERRAMIENTAS
+       ===================================================================== -->
+  <header id="chrome">
+    <div id="titlebar" class="titlebar">
+      <div class="tb-left">
+        <div class="brand" id="brand-home" title="Ir a la Pantalla de Inicio"><i class="ic" data-i="layers"></i></div>
+
+        <button id="btn-home" class="tb-btn text home-trigger" title="Pantalla de Inicio y Gestor de Proyectos">
+          <i class="ic" data-i="home"></i><span>Inicio</span>
+        </button>
+
+        <div class="menu-wrap">
+          <button id="btn-file-menu" class="tb-btn text">Archivo</button>
+          <div id="menu-file" class="dropdown-menu">
+            <button data-action="home"><i class="ic" data-i="home"></i><span>Pantalla de Inicio (Proyectos)</span></button>
+            <div class="menu-sep"></div>
+            <button data-action="new"><i class="ic" data-i="filePlus"></i><span>Nuevo proyecto en blanco</span><kbd data-sc="new"></kbd></button>
+            <button data-action="open"><i class="ic" data-i="folderOpen"></i><span>Abrir proyecto…</span><kbd data-sc="open"></kbd></button>
+            <div class="menu-sep"></div>
+            <button data-action="save"><i class="ic" data-i="save"></i><span>Guardar</span><kbd data-sc="save"></kbd></button>
+            <button data-action="save-as"><i class="ic" data-i="save"></i><span>Guardar como…</span><kbd data-sc="save_as"></kbd></button>
+            <button data-action="backup"><i class="ic" data-i="archive"></i><span>Crear copia de seguridad</span></button>
+            <div class="menu-sep"></div>
+            <div class="menu-label">Exportar texto final</div>
+            <button data-action="export-pdf"><i class="ic" data-i="printer"></i><span>PDF (.pdf)</span><kbd data-sc="export_pdf"></kbd></button>
+            <button data-action="export-docx"><i class="ic" data-i="fileText"></i><span>Word (.docx)</span></button>
+            <button data-action="export-md"><i class="ic" data-i="fileText"></i><span>Markdown (.md)</span></button>
+            <button data-action="export-txt"><i class="ic" data-i="fileText"></i><span>Texto plano (.txt)</span></button>
+            <button data-action="export-html"><i class="ic" data-i="fileText"></i><span>Página web (.html)</span></button>
+            <div class="menu-sep"></div>
+            <button data-action="quit"><i class="ic" data-i="x"></i><span>Salir</span></button>
+          </div>
+        </div>
+
+        <button id="btn-new-blank" class="tb-btn icon" title="Nuevo en blanco" aria-label="Nuevo en blanco"><i class="ic" data-i="filePlus"></i></button>
+        <button id="btn-settings" class="tb-btn icon" title="Ajustes"><i class="ic" data-i="settings"></i></button>
+        <div class="tb-sep"></div>
+        <input id="doc-title" class="doc-title-input" spellcheck="false" placeholder="Título del documento" />
+        <span id="dirty-marker" hidden title="Cambios sin guardar" aria-label="Cambios sin guardar">•</span>
+        <span id="file-chip" class="file-chip"></span>
+      </div>
+
+      <div id="tb-drag" class="tb-drag"></div>
+
+      <div class="tb-right">
+        <div class="panel-toggles" role="group" aria-label="Paneles">
+          <button class="toggle-chip" data-panel="wiki" title="Mostrar u ocultar la Wiki"><i class="ic" data-i="book"></i><span>Wiki</span></button>
+          <button class="toggle-chip" data-panel="layers" title="Mostrar u ocultar Capas"><i class="ic" data-i="layers"></i><span>Capas</span></button>
+          <button class="toggle-chip" data-panel="scraps" title="Mostrar u ocultar Recortes"><i class="ic" data-i="inbox"></i><span>Recortes</span></button>
+          <button class="toggle-chip" data-panel="toolbar" title="Mostrar u ocultar Herramientas"><i class="ic" data-i="toolbar"></i><span>Herramientas</span></button>
+        </div>
+        <button id="btn-focus" class="toggle-chip focus-chip" title="Modo Foco progresivo (F11)"><i class="ic" data-i="focus"></i><span id="focus-label">Foco</span></button>
+        <span id="save-indicator" class="save-indicator" title="Estado de guardado"></span>
+        <div class="win-controls">
+          <button id="win-min" title="Minimizar"><i class="ic" data-i="minimize"></i></button>
+          <button id="win-max" title="Maximizar"><i class="ic" data-i="maximize"></i></button>
+          <button id="win-close" class="close" title="Cerrar"><i class="ic" data-i="x"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CINTA DE DOS PISOS ESTILO WORD 365 -->
+    <div id="ribbon" class="ribbon">
+      <div class="rb-group">
+        <div class="rb-body big">
+          <button class="rb-big" data-cmd="paste" title="Pegar (Ctrl+V)"><i class="ic" data-i="clipboard"></i><span>Pegar</span></button>
+          <div class="rb-col">
+            <button class="rb-btn" data-cmd="undo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer"><i class="ic" data-i="undo"></i></button>
+            <button class="rb-btn" data-cmd="redo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer"><i class="ic" data-i="redo"></i></button>
+          </div>
+          <div class="rb-col">
+            <button class="rb-btn" data-cmd="cut" title="Cortar (Ctrl+X)"><i class="ic" data-i="scissors"></i></button>
+            <button class="rb-btn" data-cmd="copy" title="Copiar (Ctrl+C)"><i class="ic" data-i="copy"></i></button>
+            <button class="rb-btn" data-cmd="paste-plain" title="Pegar sin formato (Ctrl+Shift+V)"><i class="ic" data-i="clipboardType"></i></button>
+          </div>
+        </div>
+        <div class="rb-label">Portapapeles</div>
+      </div>
+      <div class="rb-divider"></div>
+
+      <div class="rb-group">
+        <div class="rb-body">
+          <div class="rb-row">
+            <button id="rb-font" class="rb-select font-select" title="Fuente" aria-haspopup="listbox" aria-expanded="false" aria-controls="pop-font">Georgia</button>
+            <div class="size-combo" data-size-combo>
+              <input id="rb-size" class="size-input" type="text" value="12" title="Tamaño (escribe cualquier número o 2.5x)" spellcheck="false" />
+              <button class="size-drop" title="Tamaños"><i class="ic" data-i="chevronDown"></i></button>
+            </div>
+            <button class="rb-btn" data-cmd="grow" title="Agrandar fuente"><i class="ic" data-i="aUp"></i></button>
+            <button class="rb-btn" data-cmd="shrink" title="Achicar fuente"><i class="ic" data-i="aDown"></i></button>
+            <button class="rb-btn" data-cmd="removeFormat" title="Borrar formato"><i class="ic" data-i="eraser"></i></button>
+          </div>
+          <div class="rb-row">
+            <button class="rb-btn" data-cmd="bold" data-state="bold" title="Negrita (Ctrl+B)"><i class="ic" data-i="bold"></i></button>
+            <button class="rb-btn" data-cmd="italic" data-state="italic" title="Cursiva (Ctrl+I)"><i class="ic" data-i="italic"></i></button>
+            <button class="rb-btn" data-cmd="underline" data-state="underline" title="Subrayado (Ctrl+U)"><i class="ic" data-i="underline"></i></button>
+            <button class="rb-btn" data-cmd="strikeThrough" data-state="strikeThrough" title="Tachado"><i class="ic" data-i="strike"></i></button>
+            <button class="rb-btn" data-cmd="superscript" data-state="superscript" title="Superíndice"><i class="ic" data-i="superscript"></i></button>
+            <button class="rb-btn" data-cmd="subscript" data-state="subscript" title="Subíndice"><i class="ic" data-i="subscript"></i></button>
+            <button class="rb-btn color-btn" data-cmd="pick-fore" title="Color de letra"><i class="ic" data-i="baseline"></i><span class="color-bar" data-colorbar="fore"></span></button>
+            <button class="rb-btn color-btn" data-cmd="pick-back" title="Color de resaltado"><i class="ic" data-i="highlighter"></i><span class="color-bar" data-colorbar="back"></span></button>
+          </div>
+        </div>
+        <div class="rb-label">Fuente</div>
+      </div>
+      <div class="rb-divider"></div>
+
+      <div class="rb-group">
+        <div class="rb-body">
+          <div class="rb-row">
+            <button class="rb-btn" data-cmd="insertUnorderedList" data-state="insertUnorderedList" title="Viñetas"><i class="ic" data-i="list"></i></button>
+            <button class="rb-btn" data-cmd="insertOrderedList" data-state="insertOrderedList" title="Lista numerada"><i class="ic" data-i="listOrdered"></i></button>
+            <button class="rb-btn" data-cmd="outdent" title="Disminuir sangría"><i class="ic" data-i="outdent"></i></button>
+            <button class="rb-btn" data-cmd="indent" title="Aumentar sangría"><i class="ic" data-i="indent"></i></button>
+            <select id="rb-line-height" class="rb-select narrow" title="Interlineado">
+              <option value="1.15">1.15</option><option value="1.4">1.4</option><option value="1.6">1.6</option>
+              <option value="1.75">1.75</option><option value="2">2.0</option><option value="2.5">2.5</option>
+            </select>
+          </div>
+          <div class="rb-row">
+            <button class="rb-btn" data-cmd="justifyLeft" data-state="justifyLeft" title="Alinear a la izquierda"><i class="ic" data-i="alignLeft"></i></button>
+            <button class="rb-btn" data-cmd="justifyCenter" data-state="justifyCenter" title="Centrar"><i class="ic" data-i="alignCenter"></i></button>
+            <button class="rb-btn" data-cmd="justifyRight" data-state="justifyRight" title="Alinear a la derecha"><i class="ic" data-i="alignRight"></i></button>
+            <button class="rb-btn" data-cmd="justifyFull" data-state="justifyFull" title="Justificar"><i class="ic" data-i="alignJustify"></i></button>
+            <button class="rb-btn" data-cmd="block" data-value="blockquote" title="Cita"><i class="ic" data-i="quote"></i></button>
+          </div>
+        </div>
+        <div class="rb-label">Párrafo</div>
+      </div>
+      <div class="rb-divider"></div>
+
+      <div class="rb-group">
+        <div class="rb-body">
+          <div class="rb-row">
+            <button class="style-chip" data-cmd="block" data-value="p" data-block="p">Normal</button>
+            <button class="style-chip h1" data-cmd="block" data-value="h1" data-block="h1">Título 1</button>
+          </div>
+          <div class="rb-row">
+            <button class="style-chip h2" data-cmd="block" data-value="h2" data-block="h2">Título 2</button>
+            <button class="style-chip h3" data-cmd="block" data-value="h3" data-block="h3">Título 3</button>
+          </div>
+        </div>
+        <div class="rb-label">Estilos</div>
+      </div>
+      <div class="rb-divider"></div>
+
+      <div class="rb-group">
+        <div class="rb-body">
+          <div class="rb-row">
+            <button class="rb-btn wide" data-cmd="image" title="Insertar imagen"><i class="ic" data-i="image"></i><span>Imagen</span></button>
+            <button class="rb-btn wide" data-cmd="table" title="Insertar tabla de datos o estudio"><i class="ic" data-i="table"></i><span>Tabla</span></button>
+            <button class="rb-btn wide" data-cmd="citation" title="Insertar cita bibliográfica o nota al pie [1]"><i class="ic" data-i="bookmark"></i><span>Cita / Pie</span></button>
+          </div>
+          <div class="rb-row">
+            <button class="rb-btn wide" data-cmd="scene" title="Separador de escena"><i class="ic" data-i="divider"></i><span>Escena</span></button>
+            <button class="rb-btn wide" data-cmd="new-page" title="Nueva página A4"><i class="ic" data-i="pageBreak"></i><span>Página</span></button>
+            <button class="rb-btn wide" data-cmd="note" title="Anclar nota de capa"><i class="ic" data-i="messagePlus"></i><span>Nota</span></button>
+          </div>
+        </div>
+        <div class="rb-label">Insertar e Investigación</div>
+      </div>
+      <div class="rb-divider"></div>
+
+      <div class="rb-group">
+        <div class="rb-body">
+          <div class="rb-row">
+            <button class="rb-btn" data-cmd="zoom-out" title="Alejar"><i class="ic" data-i="minus"></i></button>
+            <select id="rb-zoom" class="rb-select narrow" title="Zoom">
+              <option value="75">75%</option><option value="90">90%</option><option value="100">100%</option>
+              <option value="110">110%</option><option value="125">125%</option><option value="150">150%</option>
+              <option value="175">175%</option><option value="200">200%</option>
+            </select>
+            <button class="rb-btn" data-cmd="zoom-in" title="Acercar"><i class="ic" data-i="plus"></i></button>
+          </div>
+          <div class="rb-row">
+            <div class="seg" id="seg-view">
+              <button data-view="pages" title="Páginas A4"><i class="ic" data-i="fileText"></i><span>A4</span></button>
+              <button data-view="continuous" title="Hoja continua"><i class="ic" data-i="scroll"></i><span>Continua</span></button>
+              <button data-view="corkboard" title="Pizarra de Estructura: visualiza y reordena secciones o capítulos"><i class="ic" data-i="panels"></i><span>Pizarra</span></button>
+            </div>
+            <button id="btn-xray" class="rb-btn wide" title="Modo Rayos X Editorial: resalta diálogos (—) y palabras largas repetidas (>3 veces por párrafo)">
+              <i class="ic" data-i="xray"></i><span>Rayos X</span>
+            </button>
+          </div>
+        </div>
+        <div class="rb-label">Vista y Análisis</div>
+      </div>
+
+      <div class="rb-spacer"></div>
+      <button id="btn-collapse-ribbon" class="rb-collapse" title="Ocultar herramientas"><i class="ic" data-i="chevronUp"></i></button>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       PANTALLA DE INICIO / GESTOR DE PROYECTOS ("HOME" AL ABRIR) — DIVIDIDA EN 2 VISTAS
+       ===================================================================== -->
+  <section id="home-screen" class="home-screen" aria-hidden="true">
+    <div class="home-container">
+      <!-- ENCABEZADO DE BIENVENIDA -->
+      <div class="home-hero">
+        <div class="home-hero-left">
+          <div class="home-logo-mark"><i class="ic" data-i="layers"></i></div>
+          <div>
+            <div class="home-title-row">
+              <h1>Strata</h1>
+              <span class="home-version-badge">Edición 9.5</span>
+            </div>
+            <p class="home-subtitle">Estudio editorial, investigación académica y escritura modular por capas</p>
+            <div id="home-global-stats" class="home-global-stats"></div>
+          </div>
+        </div>
+        <div class="home-hero-actions">
+          <button id="btn-home-new-blank" class="btn">
+            <i class="ic" data-i="filePlus"></i><span>Nuevo en blanco</span>
+          </button>
+          <button id="btn-home-open-pc" class="btn">
+            <i class="ic" data-i="folderOpen"></i><span>Abrir archivo…</span>
+          </button>
+          <button id="btn-home-resume" class="btn primary">
+            <i class="ic" data-i="edit"></i><span id="home-resume-label">Continuar escribiendo</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SELECTOR SEGMENTADO SUPERIOR DE 2 GRANDES BOTONES -->
+      <div class="home-nav-bar">
+        <div class="home-seg-switcher" role="tablist" aria-label="Vistas de Inicio">
+          <button id="home-tab-recent" class="home-seg-btn active" data-home-tab="recent" role="tab" aria-selected="true">
+            <i class="ic" data-i="folderOpen"></i>
+            <span>Tus Proyectos Recientes</span>
+            <span id="home-recent-count" class="home-seg-badge">0</span>
+          </button>
+          <button id="home-tab-templates" class="home-seg-btn" data-home-tab="templates" role="tab" aria-selected="false">
+            <i class="ic" data-i="sparkles"></i>
+            <span>Crear Nuevo / Plantillas</span>
+          </button>
+        </div>
+
+        <label class="home-startup-toggle" title="Mostrar esta pantalla de bienvenida al iniciar el programa">
+          <input type="checkbox" id="home-chk-startup" checked />
+          <span>Mostrar Inicio al abrir</span>
+        </label>
+      </div>
+
+      <!-- VISTA 1 (ACTIVA POR DEFECTO): TUS PROYECTOS RECIENTES -->
+      <div id="home-pane-recent" class="home-pane active">
+        <div class="home-section">
+          <div class="home-sec-head">
+            <div>
+              <h2>Tus Proyectos Recientes</h2>
+              <p>Retoma cualquier investigación o manuscrito exactamente donde lo dejaste. Usa el menú <strong>⋯</strong> para fijar, duplicar o renombrar.</p>
+            </div>
+            <div class="home-recent-controls">
+              <div class="search-field home-search">
+                <i class="ic" data-i="search"></i>
+                <input id="home-search" type="text" placeholder="Buscar por título o contenido…" spellcheck="false" />
+              </div>
+            </div>
+          </div>
+          <div id="home-recent-grid" class="home-recent-grid"></div>
+        </div>
+      </div>
+
+      <!-- VISTA 2 (OCULTA HASTA HACER CLIC): CREAR NUEVO / PLANTILLAS -->
+      <div id="home-pane-templates" class="home-pane" hidden>
+        <div class="home-section">
+          <div class="home-sec-head">
+            <div>
+              <h2>Crear Nuevo Proyecto o Elegir Plantilla</h2>
+              <p>Elige una estructura optimizada para Investigación Académica, Informe Estratégico, Estudio Analítico o Ficción Literaria.</p>
+            </div>
+            <div class="home-new-title-bar">
+              <div class="home-new-title-wrap">
+                <i class="ic" data-i="edit"></i>
+                <input id="home-new-title" type="text" placeholder="Título para el nuevo proyecto (opcional)…" spellcheck="false" />
+              </div>
+              <button id="btn-home-create-title" class="btn primary home-create-btn" type="button">
+                <i class="ic" data-i="plus"></i><span>Crear en blanco</span>
+              </button>
+            </div>
+          </div>
+          <div id="home-templates-grid" class="home-templates-grid"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       ÁREA DE TRABAJO
+       ===================================================================== -->
+  <main id="workspace">
+    <!-- WIKI DE FICHAS (CON AVATARES Y PROPIEDADES DE INVESTIGACIÓN) -->
+    <aside id="panel-wiki" class="side-panel left">
+      <div class="panel-head">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="panel-title">Wiki y Fuentes</span>
+        </div>
+        <button id="btn-new-ficha" class="icon-btn" title="Nueva ficha o fuente documental"><i class="ic" data-i="plus"></i></button>
+      </div>
+      <div class="search-field">
+        <i class="ic" data-i="search"></i>
+        <input id="ficha-search" type="text" placeholder="Buscar fichas, datos o fuentes…" spellcheck="false" />
+      </div>
+      <div id="ficha-cats" class="cat-chips"></div>
+      <div id="ficha-list" class="row-list"></div>
+    </aside>
+    <div class="splitter" data-split="left"></div>
+
+    <!-- CENTRO: HOJA / PIZARRA + CAJÓN + PESTAÑAS -->
+    <section id="center">
+      <div id="editor-scroll">
+        <div id="sheet-layout">
+          <div id="pages-stack"></div>
+          <div id="notes-col"></div>
+          <div id="parallel-pane" class="parallel-pane" hidden>
+            <div class="parallel-head">
+              <span class="dot" id="parallel-dot"></span>
+              <span id="parallel-title" class="parallel-title"></span>
+              <span class="parallel-sub">Vista paralela</span>
+              <button id="btn-close-parallel" class="icon-btn" title="Cerrar vista paralela"><i class="ic" data-i="x"></i></button>
+            </div>
+            <div id="parallel-editor" class="parallel-editor rich-editor" contenteditable="true" spellcheck="true" lang="es"></div>
+          </div>
+        </div>
+
+        <!-- PIZARRA DE ESTRUCTURA (CORKBOARD) -->
+        <div id="corkboard-view" class="corkboard-view" hidden>
+          <div class="corkboard-header">
+            <div>
+              <h2 class="corkboard-title">Pizarra de Estructura</h2>
+              <p class="corkboard-subtitle">Arrastra las tarjetas para reordenar capítulos o secciones. Haz clic en una tarjeta para abrirla en el editor.</p>
+            </div>
+            <div class="corkboard-actions">
+              <button id="btn-corkboard-new-sheet" class="btn primary"><i class="ic" data-i="plus"></i><span>Nueva sección / capítulo</span></button>
+              <button id="btn-corkboard-exit" class="btn"><i class="ic" data-i="fileText"></i><span>Volver a la hoja</span></button>
+            </div>
+          </div>
+          <div id="corkboard-grid" class="corkboard-grid"></div>
+        </div>
+      </div>
+
+      <section id="scraps-drawer" class="scraps-drawer">
+        <div class="drawer-head" id="scraps-head">
+          <button id="btn-scraps-collapse" class="icon-btn" title="Plegar o desplegar"><i class="ic" data-i="chevronDown"></i></button>
+          <span class="panel-title">Recortes</span>
+          <span id="scraps-count" class="count-badge">0</span>
+          <span class="drawer-hint">Arrastra texto aquí para guardarlo, o arrastra un recorte a la hoja.</span>
+          <button id="btn-hide-scraps" class="icon-btn" title="Ocultar cajón"><i class="ic" data-i="x"></i></button>
+        </div>
+        <div id="scraps-list" class="scraps-list"></div>
+      </section>
+
+      <footer id="bottom-bar">
+        <div id="sheet-tabs" class="sheet-tabs"></div>
+        <div id="status" class="status"></div>
+        <span id="session-clock" class="session-clock">⏱ 0 min en sesión</span>
+      </footer>
+    </section>
+
+    <div class="splitter" data-split="right"></div>
+    <!-- CAPAS (INDEPENDIENTES POR CAPÍTULO — ESTILO MODERNO COMPACTO) -->
+    <aside id="panel-layers" class="side-panel right">
+      <div class="panel-head">
+        <div style="display:flex;align-items:center;gap:6px;min-width:0;">
+          <span class="panel-title">Capas</span>
+          <span id="layer-sheet-badge" class="pill" title="Capas exclusivas de este capítulo"></span>
+        </div>
+        <button id="btn-new-layer" class="icon-btn" title="Nueva capa en este capítulo"><i class="ic" data-i="plus"></i></button>
+      </div>
+      <p class="panel-hint">Arrastra desde <i class="ic inline" data-i="grip"></i> hacia un párrafo para anclar una nota al margen.</p>
+      <div id="layer-list" class="row-list"></div>
+    </aside>
+  </main>
+</div>
+
+<!-- =====================================================================
+     ELEMENTOS FLOTANTES
+     ===================================================================== -->
+<button id="zen-exit" class="zen-exit"><i class="ic" data-i="x"></i><span>Salir del modo Zen (Esc)</span></button>
+
+<!-- Mini-barra contextual al seleccionar texto -->
+<div id="mini-toolbar" class="mini-toolbar" aria-hidden="true">
+  <div class="mt-row">
+    <button id="mt-font" class="rb-select font-select compact" title="Fuente" aria-haspopup="listbox" aria-expanded="false" aria-controls="pop-font">Georgia</button>
+    <div class="size-combo compact" data-size-combo>
+      <input id="mt-size" class="size-input" type="text" value="12" spellcheck="false" title="Tamaño" />
+      <button class="size-drop" title="Tamaños"><i class="ic" data-i="chevronDown"></i></button>
+    </div>
+    <button class="rb-btn" data-cmd="grow" title="Agrandar"><i class="ic" data-i="aUp"></i></button>
+    <button class="rb-btn" data-cmd="shrink" title="Achicar"><i class="ic" data-i="aDown"></i></button>
+  </div>
+  <div class="mt-row">
+    <button class="rb-btn" data-cmd="bold" data-state="bold" title="Negrita"><i class="ic" data-i="bold"></i></button>
+    <button class="rb-btn" data-cmd="italic" data-state="italic" title="Cursiva"><i class="ic" data-i="italic"></i></button>
+    <button class="rb-btn" data-cmd="underline" data-state="underline" title="Subrayado"><i class="ic" data-i="underline"></i></button>
+    <button class="rb-btn color-btn" data-cmd="pick-back" title="Resaltador"><i class="ic" data-i="highlighter"></i><span class="color-bar" data-colorbar="back"></span></button>
+    <button class="rb-btn color-btn" data-cmd="pick-fore" title="Color de letra"><i class="ic" data-i="baseline"></i><span class="color-bar" data-colorbar="fore"></span></button>
+    <button class="rb-btn" data-cmd="insertUnorderedList" title="Viñetas"><i class="ic" data-i="list"></i></button>
+    <button class="rb-btn" data-cmd="insertOrderedList" title="Numeración"><i class="ic" data-i="listOrdered"></i></button>
+    <button class="mt-note" data-cmd="citation" title="Insertar cita o nota al pie [1]"><i class="ic" data-i="bookmark"></i><span>Cita</span></button>
+    <button class="mt-note" data-cmd="note" title="Anclar nota de capa"><i class="ic" data-i="plus"></i><span>Nota</span></button>
+  </div>
+</div>
+
+<!-- Barra contextual flotante para Tablas (.strata-table) -->
+<div id="table-toolbar" class="table-toolbar" hidden>
+  <span class="tt-label"><i class="ic" data-i="table"></i> Tabla</span>
+  <button data-tbl="add-row" title="Añadir fila debajo">+ Fila</button>
+  <button data-tbl="add-col" title="Añadir columna a la derecha">+ Columna</button>
+  <button data-tbl="del-row" title="Eliminar fila actual">− Fila</button>
+  <button data-tbl="del-col" title="Eliminar columna actual">− Columna</button>
+  <span class="bar-sep"></span>
+  <button data-tbl="delete-table" class="danger" title="Eliminar tabla completa"><i class="ic" data-i="trash"></i></button>
+</div>
+
+<!-- Menú contextual propio -->
+<div id="ctx-menu" class="ctx-menu"></div>
+
+<!-- Paleta de colores compartida -->
+<div id="pop-palette" class="popover palette-pop">
+  <div class="pop-title" id="palette-title">Color</div>
+  <div id="palette-swatches" class="swatches"></div>
+  <div class="palette-foot">
+    <button id="palette-none" class="text-btn">Sin color</button>
+    <label class="custom-color"><input id="palette-custom" type="color" value="#6889B5" /><span>Personalizado</span></label>
+  </div>
+</div>
+
+<!-- Lista de tamaños compartida -->
+<div id="pop-size" class="popover size-pop"></div>
+
+<!-- Tarjeta flotante de ficha (Popover moderno con imagen y propiedades) -->
+<div id="ficha-card" class="ficha-card">
+  <div class="fc-top">
+    <div id="fc-avatar-wrap" class="fc-avatar-wrap" hidden>
+      <img id="fc-avatar-img" src="" alt="" />
+    </div>
+    <div class="fc-head-info">
+      <div class="fc-head"><span class="fc-name" id="fc-name"></span><span class="pill" id="fc-cat"></span></div>
+      <div id="fc-mentions" class="fc-mentions-sub"></div>
+      <div class="fc-desc" id="fc-desc"></div>
+    </div>
+  </div>
+  <div id="fc-props" class="fc-props" hidden></div>
+  <div class="fc-foot">
+    <button id="fc-cite" class="text-btn"><i class="ic" data-i="bookmark"></i> Citar ficha</button>
+    <button id="fc-edit" class="text-btn">Editar ficha</button>
+  </div>
+</div>
+
+<!-- Selección y redimensión de imágenes -->
+<div id="img-resizer" class="img-resizer">
+  <div class="img-bar">
+    <button data-img="25">25%</button><button data-img="50">50%</button><button data-img="75">75%</button><button data-img="100">100%</button>
+    <span class="bar-sep"></span>
+    <button data-img="left" title="Izquierda"><i class="ic" data-i="alignLeft"></i></button>
+    <button data-img="center" title="Centro"><i class="ic" data-i="alignCenter"></i></button>
+    <button data-img="right" title="Derecha"><i class="ic" data-i="alignRight"></i></button>
+    <span class="bar-sep"></span>
+    <button data-img="delete" class="danger" title="Eliminar imagen"><i class="ic" data-i="trash"></i></button>
+  </div>
+  <span class="handle nw" data-h="nw"></span><span class="handle ne" data-h="ne"></span>
+  <span class="handle sw" data-h="sw"></span><span class="handle se" data-h="se"></span>
+</div>
+
+<div id="toast" class="toast"></div>
+<div id="drop-hint" class="drop-hint"></div>
+
+<!-- =====================================================================
+     MODALES
+     ===================================================================== -->
+<div id="modal-backdrop" class="modal-backdrop">
+
+  <!-- AJUSTES -->
+  <div id="modal-settings" class="modal settings-modal" role="dialog">
+    <nav class="settings-nav">
+      <div class="settings-nav-title">Ajustes</div>
+      <button class="snav active" data-tab="appearance"><i class="ic" data-i="palette"></i><span>Apariencia</span></button>
+      <button class="snav" data-tab="editor"><i class="ic" data-i="type"></i><span>Editor</span></button>
+      <button class="snav" data-tab="autoformat"><i class="ic" data-i="wand"></i><span>Auto-formato</span></button>
+      <button class="snav" data-tab="page"><i class="ic" data-i="fileText"></i><span>Página</span></button>
+      <button class="snav" data-tab="panels"><i class="ic" data-i="panels"></i><span>Paneles</span></button>
+      <button class="snav" data-tab="saving"><i class="ic" data-i="save"></i><span>Guardado</span></button>
+      <button class="snav" data-tab="shortcuts"><i class="ic" data-i="keyboard"></i><span>Atajos</span></button>
+
+    </nav>
+    <div class="settings-body">
+      <button class="icon-btn modal-close" data-close title="Cerrar"><i class="ic" data-i="x"></i></button>
+
+      <section class="stab active" data-tab="appearance">
+        <h2>Apariencia</h2>
+        <p class="s-sub">Cada tema adapta toda la interfaz, la Pantalla de Inicio, la Pizarra y la morfología de la hoja.</p>
+        <div id="theme-cards" class="theme-cards">
+          <button class="theme-card" data-theme-choice="grafito">
+            <div class="tc-preview t-grafito"><div class="tc-side"></div><div class="tc-page"><b></b><i></i><i></i><hr><i></i></div></div>
+            <div class="tc-name">Oscuro Grafito</div><div class="tc-desc">Sans-Serif técnica, paneles translúcidos y trazos suaves</div>
+          </button>
+          <button class="theme-card" data-theme-choice="victoriano">
+            <div class="tc-preview t-victoriano"><div class="tc-side"></div><div class="tc-page"><b></b><i></i><i></i><hr><i></i></div></div>
+            <div class="tc-name">Estudio Victoriano</div><div class="tc-desc">Serif clásica, marco doble bronce y florón — ❖ —</div>
+          </button>
+          <button class="theme-card" data-theme-choice="sepia">
+            <div class="tc-preview t-sepia"><div class="tc-side"></div><div class="tc-page"><b></b><i></i><i></i><hr><i></i></div></div>
+            <div class="tc-name">Máquina de Escribir / Sepia</div><div class="tc-desc">Tipografía mecanográfica y papel crema cálido</div>
+          </button>
+          <button class="theme-card" data-theme-choice="editorial">
+            <div class="tc-preview t-editorial"><div class="tc-side"></div><div class="tc-page"><b></b><i></i><i></i><hr><i></i></div></div>
+            <div class="tc-name">Luz Editorial</div><div class="tc-desc">Blanco de imprenta, mesa clara de alto contraste</div>
+          </button>
+        </div>
+      </section>
+
+      <section class="stab" data-tab="editor">
+        <h2>Editor</h2>
+        <p class="s-sub">Tipografía por defecto de la hoja. El formato aplicado a una selección siempre tiene prioridad.</p>
+        <div class="s-row"><div><div class="s-label">Fuente del texto</div><div class="s-help">Para todo el documento</div></div><select id="set-font" class="s-select font-select"></select></div>
+        <div class="s-row"><div><div class="s-label">Tamaño base</div><div class="s-help">En píxeles de pantalla</div></div><input id="set-font-size" class="s-input" type="number" min="10" max="40" step="0.5" /></div>
+        <div class="s-row"><div><div class="s-label">Interlineado</div></div><input id="set-line-height" class="s-input" type="number" min="1" max="3" step="0.05" /></div>
+        <div class="s-row"><div><div class="s-label">Mini-barra al seleccionar texto</div><div class="s-help">Barra flotante de formato estilo Word</div></div><label class="switch"><input type="checkbox" data-cfg="autoformat.mini_toolbar" /><span></span></label></div>
+        <div class="s-row"><div><div class="s-label">Limpiar formato externo al pegar</div><div class="s-help">Conserva negrita, cursiva y títulos; descarta colores y fuentes ajenas</div></div><label class="switch"><input type="checkbox" data-cfg="autoformat.sanitize_paste" /><span></span></label></div>
+      </section>
+
+      <section class="stab" data-tab="autoformat">
+        <h2>Auto-formato de escritor</h2>
+        <p class="s-sub">Reglas que se aplican mientras escribes. Ctrl+Z deshace cualquier conversión.</p>
+        <div class="s-row"><div><div class="s-label">Separador de escena</div><div class="s-help"><code>---</code> o <code>***</code> + Enter crea un separador visual</div></div><label class="switch"><input type="checkbox" data-cfg="autoformat.scene_divider" /><span></span></label></div>
+        <div class="s-row"><div><div class="s-label">Raya de diálogo</div><div class="s-help"><code>--</code> se convierte en <code>—</code></div></div><label class="switch"><input type="checkbox" data-cfg="autoformat.em_dash" /><span></span></label></div>
+        <div class="s-row"><div><div class="s-label"><code>- </code> al inicio del renglón</div><div class="s-help">Qué hacer cuando un párrafo empieza con guion y espacio</div></div>
+          <div class="seg s-seg" data-cfg-seg="autoformat.dash_start">
+            <button data-val="dialogue">Diálogo —</button><button data-val="list">Lista</button><button data-val="off">Nada</button>
+          </div>
+        </div>
+        <div class="s-row"><div><div class="s-label">Listas numeradas automáticas</div><div class="s-help"><code>1. </code> al inicio inicia una lista numerada</div></div><label class="switch"><input type="checkbox" data-cfg="autoformat.auto_numbered" /><span></span></label></div>
+      </section>
+
+      <section class="stab" data-tab="page">
+        <h2>Página</h2>
+        <div class="s-row"><div><div class="s-label">Modo de vista</div></div>
+          <div class="seg s-seg" data-cfg-seg="page.view_mode">
+            <button data-val="pages">Páginas A4</button>
+            <button data-val="continuous">Hoja continua</button>
+            <button data-val="corkboard">Pizarra</button>
+          </div>
+        </div>
+        <div class="s-row"><div><div class="s-label">Márgenes</div><div class="s-help">Estrecho 1,27 cm · Normal 2,54 cm · Amplio 3,8 cm</div></div>
+          <div class="seg s-seg" data-cfg-seg="page.margin"><button data-val="narrow">Estrecho</button><button data-val="normal">Normal</button><button data-val="wide">Amplio</button></div>
+        </div>
+      </section>
+
+      <section class="stab" data-tab="panels">
+        <h2>Paneles e Inicio</h2>
+        <p class="s-sub">También puedes alternarlos desde los interruptores de la barra superior.</p>
+        <div class="s-row"><div><div class="s-label">Pantalla de Inicio al abrir</div><div class="s-help">Muestra tus proyectos recientes, conteo de palabras y plantillas al iniciar Strata</div></div><label class="switch"><input type="checkbox" data-cfg="show_home_on_startup" /><span></span></label></div>
+        <div class="s-row"><div class="s-label">Wiki de fichas</div><label class="switch"><input type="checkbox" data-cfg="panels.wiki" /><span></span></label></div>
+        <div class="s-row"><div class="s-label">Panel de capas</div><label class="switch"><input type="checkbox" data-cfg="panels.layers" /><span></span></label></div>
+        <div class="s-row"><div class="s-label">Cajón de recortes</div><label class="switch"><input type="checkbox" data-cfg="panels.scraps" /><span></span></label></div>
+        <div class="s-row"><div class="s-label">Cinta de herramientas</div><label class="switch"><input type="checkbox" data-cfg="panels.toolbar" /><span></span></label></div>
+      </section>
+
+      <section class="stab" data-tab="saving">
+        <h2>Guardado</h2>
+        <div class="s-row"><div><div class="s-label">Guardado automático</div><div class="s-help">Guarda en el archivo abierto mientras escribes</div></div><label class="switch"><input type="checkbox" data-cfg="autosave.enabled" /><span></span></label></div>
+        <div class="s-row"><div><div class="s-label">Copia de seguridad al pulsar Guardar</div><div class="s-help">Crea un .strata con fecha en la carpeta backups/</div></div><label class="switch"><input type="checkbox" data-cfg="backups.on_manual_save" /><span></span></label></div>
+        <div class="s-row column"><div class="s-label">Archivo actual</div><input id="set-file-path" class="s-input full" readonly /></div>
+        <div class="s-actions"><button class="btn" data-action="backup">Crear copia ahora</button><button class="btn" data-action="save-as">Guardar como…</button></div>
+      </section>
+
+      <section class="stab" data-tab="shortcuts">
+        <h2>Atajos de teclado</h2>
+        <p class="s-sub">Haz clic en un atajo y presiona la nueva combinación. Esc cancela.</p>
+        <div id="shortcut-list" class="shortcut-list"></div>
+        <div class="s-actions"><button id="btn-reset-shortcuts" class="btn ghost">Restaurar atajos originales</button></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- FICHA (CON AVATAR REDONDEADO Y PROPIEDADES ESTRUCTURADAS DE INVESTIGACIÓN) -->
+  <div id="modal-ficha" class="modal ficha-modal" role="dialog">
+    <div class="modal-head"><h3 id="ficha-modal-title">Nueva ficha</h3><button class="icon-btn" data-close><i class="ic" data-i="x"></i></button></div>
+
+    <div class="ficha-modal-top">
+      <div id="ficha-avatar-box" class="ficha-avatar-box" title="Haz clic para subir imagen o pega una imagen con Ctrl+V">
+        <img id="ficha-avatar-preview" src="" alt="" hidden />
+        <div id="ficha-avatar-placeholder" class="ficha-avatar-placeholder">
+          <i class="ic" data-i="image"></i>
+          <span>Avatar / Imagen</span>
+        </div>
+        <button id="btn-ficha-avatar-clear" type="button" class="ficha-avatar-clear" title="Quitar imagen" hidden><i class="ic" data-i="x"></i></button>
+      </div>
+      <div class="ficha-modal-fields">
+        <label class="f-label" style="margin-top:0;">Nombre exacto (se resalta en el texto)</label>
+        <input id="ficha-name" class="s-input full" placeholder="Ej. Elena Vance, Hipótesis Central, Fuente A…" />
+        <div class="ficha-row-2col">
+          <div>
+            <label class="f-label">Categoría</label>
+            <input id="ficha-category" class="s-input full" list="ficha-cat-list" placeholder="Fuentes, Datos, Conceptos…" />
+            <datalist id="ficha-cat-list"></datalist>
+          </div>
+          <div>
+            <label class="f-label">Color distintivo</label>
+            <div id="ficha-colors" class="swatches inline"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha-props-section">
+      <div class="ficha-props-header">
+        <label class="f-label" style="margin:0;">Propiedades estructuradas (Fuente, Fecha, Métrica, Rol…)</label>
+        <button id="btn-ficha-add-prop" type="button" class="btn-mini-add"><i class="ic" data-i="plus"></i><span>Añadir campo</span></button>
+      </div>
+      <div id="ficha-props-editor" class="ficha-props-editor"></div>
+    </div>
+
+    <label class="f-label" for="ficha-desc">Descripción, resumen o notas de investigación</label>
+    <textarea id="ficha-desc" class="s-input full" rows="4" placeholder="Escribe la definición, biografía, hallazgos o extracto documental… (También puedes pegar una imagen con Ctrl+V con esta ventana abierta)"></textarea>
+    <div class="modal-actions">
+      <button id="ficha-delete" class="btn danger ghost">Eliminar</button>
+      <span class="grow"></span>
+      <button class="btn ghost" data-close>Cancelar</button>
+      <button id="ficha-save" class="btn primary">Guardar ficha</button>
+    </div>
+  </div>
+
+  <!-- CAPA -->
+  <div id="modal-layer" class="modal small" role="dialog">
+    <div class="modal-head"><h3 id="layer-modal-title">Nueva capa</h3><button class="icon-btn" data-close><i class="ic" data-i="x"></i></button></div>
+    <label class="f-label">Nombre</label>
+    <input id="layer-name" class="s-input full" />
+    <label class="f-label">Descripción</label>
+    <input id="layer-desc" class="s-input full" />
+    <label class="f-label">Color de la capa</label>
+    <div id="layer-colors" class="swatches inline"></div>
+    <div class="modal-actions"><button id="layer-delete" class="btn danger ghost">Eliminar</button><span class="grow"></span><button class="btn ghost" data-close>Cancelar</button><button id="layer-save" class="btn primary">Guardar</button></div>
+  </div>
+
+  <!-- MODAL: CITA BIBLIOGRÁFICA / NOTA AL PIE [1] -->
+  <div id="modal-citation" class="modal small" role="dialog">
+    <div class="modal-head"><h3>Insertar Cita o Nota al Pie</h3><button class="icon-btn" data-close><i class="ic" data-i="x"></i></button></div>
+    <label class="f-label">Vincular con una Ficha / Fuente de la Wiki (opcional)</label>
+    <select id="cit-ficha-select" class="s-select full">
+      <option value="">— Escribir referencia manual —</option>
+    </select>
+    <label class="f-label">Formato de inserción</label>
+    <div class="seg s-seg" id="cit-mode-seg" style="margin-top:4px;">
+      <button type="button" data-cit-mode="footnote" class="active">Nota al pie numerada [1]</button>
+      <button type="button" data-cit-mode="inline">Cita en línea (Autor, Año)</button>
+    </div>
+    <label class="f-label">Texto de la referencia o nota al pie</label>
+    <textarea id="cit-text" class="s-input full" rows="3" placeholder="Ej. Vance, E. (2024). Archivos y Memoria Estructural. Editorial Universitaria, p. 42."></textarea>
+    <label class="f-label">Páginas o localizador específico (opcional)</label>
+    <input id="cit-locator" class="s-input full" placeholder="Ej. pp. 42-45, Cap. 3" />
+    <div class="modal-actions">
+      <span class="grow"></span>
+      <button class="btn ghost" data-close>Cancelar</button>
+      <button id="cit-insert-btn" class="btn primary">Insertar referencia</button>
+    </div>
+  </div>
+
+  <!-- MODAL: CONSTRUCTOR DE TABLAS LIMPIAS -->
+  <div id="modal-table" class="modal tiny" role="dialog">
+    <div class="modal-head"><h3>Insertar Tabla de Estudio</h3><button class="icon-btn" data-close><i class="ic" data-i="x"></i></button></div>
+    <div class="ficha-row-2col" style="margin-top:6px;">
+      <div>
+        <label class="f-label">Columnas</label>
+        <input id="tbl-cols" class="s-input full" type="number" min="1" max="10" value="3" />
+      </div>
+      <div>
+        <label class="f-label">Filas de datos</label>
+        <input id="tbl-rows" class="s-input full" type="number" min="1" max="30" value="3" />
+      </div>
+    </div>
+    <label class="f-label">Encabezados separados por coma (opcional)</label>
+    <input id="tbl-headers" class="s-input full" placeholder="Ej. Dimensión, Fuente Documental, Resultado" />
+    <div class="modal-actions">
+      <span class="grow"></span>
+      <button class="btn ghost" data-close>Cancelar</button>
+      <button id="tbl-insert-btn" class="btn primary">Insertar tabla</button>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO GENÉRICO -->
+  <div id="modal-dialog" class="modal tiny" role="dialog">
+    <h3 id="dialog-title"></h3>
+    <p id="dialog-text" class="s-sub"></p>
+    <input id="dialog-input" class="s-input full" />
+    <div class="modal-actions"><span class="grow"></span><button id="dialog-cancel" class="btn ghost">Cancelar</button><button id="dialog-ok" class="btn primary">Aceptar</button></div>
+  </div>
+</div>
+
+<script src="/ui/app.js"></script>
+<script src="/ui/research.js"></script>
+<script src="/ui/planning.js"></script>
+<script src="/ui/v8.js"></script>
+<script src="/ui/v95.js"></script>
+<script src="/ui/editorial.js"></script>
+<script src="/ui/planning2.js"></script>
+<script src="/ui/canvas.js"></script>
+<script src="/ui/themes.js"></script>
+<script src="/ui/wiki2.js"></script>
+<script src="/ui/research2.js"></script>
+<script src="/ui/beta2.js"></script>
+<script src="/ui/goals.js"></script>
+<script src="/ui/home-effects.js"></script>
+<script src="/ui/auditor.js"></script>
+<script src="/ui/v10.js"></script>
+<script src="/ui/search11.js"></script>
+<script src="/ui/social11.js"></script>
+<script src="/ui/v11.js"></script>
+</body>
+</html>
