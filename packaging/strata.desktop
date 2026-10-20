@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Strata Studio
+Comment=Escritura e investigación por capas
+Exec=Strata %f
+Icon=strata
+Terminal=false
+Categories=Office;WordProcessor;
+MimeType=application/x-strata;
+StartupWMClass=Strata
