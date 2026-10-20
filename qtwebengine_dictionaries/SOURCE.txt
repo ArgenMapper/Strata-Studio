@@ -1,0 +1,2 @@
+https://chromium.googlesource.com/chromium/deps/hunspell_dictionaries/+/refs/heads/main/
+Spanish dictionary es-ES-3-0.bdic, renamed for Qt WebEngine.
