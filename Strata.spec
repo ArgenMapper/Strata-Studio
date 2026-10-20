@@ -5,14 +5,16 @@ from pathlib import Path
 import os
 import sys
 from PyInstaller.utils.hooks import collect_submodules
+import runpy
 is_mac = sys.platform == 'darwin'
 target_arch = 'universal2' if is_mac else None
 extra_imports = collect_submodules('keyring.backends') if sys.platform != 'win32' else []
+python_binaries = runpy.run_path('packaging/windows_python_abi.py')['runtime_binaries']()
 core_data=[(str(p),'core/'+str(p.parent.relative_to('core'))) for p in Path('core').rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.name!='generar_licencias_admin.py' and (p.suffix=='.py' or p.name in ('license_public.json','conexion_nube.json'))]
 a = Analysis(
     ['bootstrap.py'],
     pathex=[],
-    binaries=[],
+    binaries=python_binaries,
     datas=[('ui', 'ui'), *core_data, ('app_icon.ico', '.'), ('qtwebengine_dictionaries', 'qtwebengine_dictionaries')],
     hiddenimports=["main", "core.updater", "PySide6.QtTextToSpeech",'PySide6.QtSvg','cryptography.hazmat.primitives.asymmetric.ed25519', 'cryptography.fernet', *extra_imports],
     hookspath=[],
