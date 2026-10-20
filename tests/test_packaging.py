@@ -3,6 +3,11 @@ from pathlib import Path
 import os
 import sys
 import unittest
+import runpy
+import tempfile
+import io
+import zipfile
+import hashlib
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,6 +16,26 @@ from empaquetar_strata import build_environment
 
 
 class PackagingTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == 'win32', 'Puente ABI de Python en Windows')
+    def test_missing_abi_dll_uses_verified_official_archive(self):
+        helper = runpy.run_path(str(ROOT / 'packaging/windows_python_abi.py'))
+        resolve = helper['runtime_binaries']
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, 'w') as bundle:
+            bundle.writestr('python3t.dll', b'official-dll-fixture')
+        payload = archive.getvalue()
+        namespace = resolve.__globals__
+        with tempfile.TemporaryDirectory(dir=ROOT / 'build') as directory:
+            root = Path(directory)
+            with patch.dict(namespace, SHA256=hashlib.sha256(payload).hexdigest(),
+                            urlopen=lambda *args, **kwargs: io.BytesIO(payload)):
+                entries = resolve(root / 'python', root / 'cache')
+            self.assertEqual(Path(entries[0][0]).read_bytes(), b'official-dll-fixture')
+            with patch.dict(namespace, urlopen=lambda *args, **kwargs: io.BytesIO(b'corrupt')):
+                with self.assertRaises(ValueError):
+                    resolve(root / 'python', root / 'corrupt-cache')
+            self.assertFalse((root / 'corrupt-cache').exists())
+
     @unittest.skipUnless(sys.platform == 'win32', 'Búsqueda de DLL en Windows')
     def test_build_removes_third_party_dll_search_paths(self):
         with patch.dict(os.environ, {"PATH": r"C:\tools\poppler;C:\tools\libheif", "QT_PLUGIN_PATH": r"C:\otherQt", "PYTHONPATH": r"C:\otherPython"}):
