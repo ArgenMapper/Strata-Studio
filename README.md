@@ -17,6 +17,6 @@ En Mac/Linux el comando puede llamarse `python3`. Los paquetes compilados incluy
 
 Lee [DISTRIBUCION.md](DISTRIBUCION.md). El flujo manual **Generar instaladores** de GitHub Actions compila y comprueba cada sistema por separado. No publica versiones automáticamente.
 
-Los paquetes de Mac y Linux están preparados para su primera compilación nativa; aún requieren validación en equipos reales antes de anunciarse como compatibles.
+Cada paquete debe superar el diagnóstico de arranque y las pruebas del núcleo en su propio sistema. Los paquetes generados son versiones de prueba y requieren validación de uso en equipos reales antes de su publicación.
 
 No subas la carpeta de trabajo completa: contiene datos personales. Usa `python preparar_github.py` para exportar las fuentes distribuibles.
