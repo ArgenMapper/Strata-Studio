@@ -1,0 +1,20 @@
+# Material exclusivo del creador y artefactos locales.
+admin_privado/
+build/
+dist/
+__pycache__/
+*.pyc
+*.exe
+cuentas/
+Proyectos/
+backups/
+config_usuario.json
+proyecto_datos.json
+social_local.json
+*.strata
+*.dpapi.json
+.venv/
+release/
+*.AppImage
+*.dmg
+*.app/
